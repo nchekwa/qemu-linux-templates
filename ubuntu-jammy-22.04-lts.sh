@@ -35,7 +35,7 @@ else
 fi
 
 echo "[NETPLAN] Download NETPLAN files"
-files=("00-dhcp.yaml")
+files=("00-installer-config.yaml" "01-static.yaml.disabled" "02-static-multi-gw.yaml.disabled" "10-bonds.yaml.disabled" "90-wifi.yaml.disabled" "91-wifi-wpa.yaml.disabled" "92-wifi-open.yaml.disabled")
 download_dir="/tmp/netplan"
 mkdir -p $download_dir
 base_url="https://raw.githubusercontent.com/nchekwa/qemu-linux-templates/main/netplan/"
@@ -88,16 +88,17 @@ virt-customize -a $file_path --run-command 'apt-get clean --dry-run'
 echo "[ LAST ] Last changes.. + firstboot parameters"
 virt-customize \
     --root-password password:$root_pasword \
-    --run-command "sed -i 's/ console=ttyS0//g' /etc/default/grub.d/50-cloudimg-settings.cfg" \
     --run-command "sed -i 's/GRUB_CMDLINE_LINUX/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0 console=tty1\"/g' /etc/default/grub" \
     --run-command "update-grub" \
     --run-command "systemctl mask apt-daily.service apt-daily-upgrade.service" \
     --firstboot-command "netplan generate && netplan apply" \
     --firstboot-command "/usr/bin/ssh-keygen -A" \
     --firstboot-command "dpkg --configure -a" \
+    --firstboot-command "systemctrl restart ssh" \
     --firstboot-command "sync" \
     -a $file_path
     
 
 echo "[  DONE] Done.."
 mv $file_path virtioa.qcow2
+rm -R /tmp/netplan
