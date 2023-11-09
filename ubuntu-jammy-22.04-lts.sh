@@ -47,8 +47,7 @@ for file_name in "${files[@]}"; do
     wget "$url" -O "$output_path"
     virt-customize -a $file_path --copy-in $download_dir/$file_name:/etc/netplan
 done
-
-
+virt-customize -a $file_path --run-command 'chmod -R 600 /etc/netplan'
 
 
     
@@ -97,7 +96,7 @@ virt-customize \
     --run-command "update-grub" \
     --run-command "systemctl mask apt-daily.service apt-daily-upgrade.service" \
     --firstboot-command "netplan generate && netplan apply" \
-    --firstboot-command "dpkg-reconfigure openssh-server" \
+    --firstboot-command "/usr/bin/ssh-keygen -A" \
     --firstboot-command "sync" \
     -a $file_path
     
