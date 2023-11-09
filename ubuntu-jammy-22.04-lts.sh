@@ -72,17 +72,17 @@ echo "[   APT] Add agent to image"
 virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y'
 
 
-echo "[   APT] Uninstall some libs"
+#echo "[   APT] Uninstall some libs"
 #virt-customize -a $file_path --run-command 'apt-get purge -y netplan.io libnetplan0'
-virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
+#virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
 
 
-echo "[   APT] Install basic tools"
-virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,make,wget,curl,telnet,traceroute,tcptraceroute,sudo,gnupg,ca-certificates,nfs-common,aria2,qemu-utils
+#echo "[   APT] Install basic tools"
+#virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,make,wget,curl,telnet,traceroute,tcptraceroute,sudo,gnupg,ca-certificates,nfs-common,aria2,qemu-utils
 
 
-echo "[ GUEST] Install guest agents"
-virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
+#echo "[ GUEST] Install guest agents"
+#virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
 
 echo "[ACCESS] set root password"
 virt-sysprep -a $file_path --root-password password:$root_pasword
