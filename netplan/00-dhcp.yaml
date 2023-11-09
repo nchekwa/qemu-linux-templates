@@ -1,4 +1,3 @@
-# may be templated in the future
 network:
   version: 2
   renderer: networkd
