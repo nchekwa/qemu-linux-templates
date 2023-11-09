@@ -54,7 +54,7 @@ echo "[    TZ] set timezone UTC"
 virt-customize -a $file_path --timezone UTC
 
 echo "[ACCESS] set root password"
-virt-customize -a $file_path  --root-password password:root
+virt-customize -a $file_path  --root-password password:$root_pasword
 
 echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
