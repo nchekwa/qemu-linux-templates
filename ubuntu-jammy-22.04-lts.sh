@@ -47,7 +47,7 @@ for file_name in "${files[@]}"; do
     wget "$url" -O "$output_path"
     virt-customize -a $file_path --copy-in $download_dir/$file_name:/etc/netplan
 done
-virt-customize -a $file_path --run-command 'chmod -R 600 /etc/netplan'
+virt-customize -a $file_path --run-command 'chmod -R 600 /etc/netplan/'
 
 
     
@@ -62,8 +62,7 @@ echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
 echo "[   SSH] allow root login with ssh-key only"
 virt-customize -a $file_path --run-command 'sed -i s/^#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config'
-#echo "[   SSH] Generate Keys"
-#virt-customize -a $file_path --run-command '/usr/bin/ssh-keygen -A'
+
 
 echo "[  DISK] - increase sda disk size +98G"
 qemu-img resize $file_path +98G
@@ -76,17 +75,16 @@ echo "[   APT] Add agent to image"
 virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y'
 
 
-#echo "[   APT] Uninstall some libs"
-#virt-customize -a $file_path --run-command 'apt-get purge -y netplan.io libnetplan0'
-#virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
+echo "[   APT] Uninstall some libs"
+virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
 
 
-#echo "[   APT] Install basic tools"
-#virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,make,wget,curl,telnet,traceroute,tcptraceroute,sudo,gnupg,ca-certificates,nfs-common,aria2,qemu-utils
+echo "[   APT] Install basic tools"
+virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,make,wget,curl,telnet,traceroute,tcptraceroute,sudo,gnupg,ca-certificates,nfs-common,aria2,qemu-utils
 
 
-#echo "[ GUEST] Install guest agents"
-#virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
+echo "[ GUEST] Install guest agents"
+virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
 
 echo "[ACCESS] set root password"
 virt-customize \
@@ -97,6 +95,7 @@ virt-customize \
     --run-command "systemctl mask apt-daily.service apt-daily-upgrade.service" \
     --firstboot-command "netplan generate && netplan apply" \
     --firstboot-command "/usr/bin/ssh-keygen -A" \
+    --firstboot-command "dpkg --configure -a" \
     --firstboot-command "sync" \
     -a $file_path
     
