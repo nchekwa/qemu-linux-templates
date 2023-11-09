@@ -26,7 +26,7 @@ if [ -e /etc/os-release ]; then
         else
             echo "Repository line already exists"
         fi
-        apk update && apk add nano wget curl libguestfs p7zip
+        apk update && apk add nano wget curl libguestfs p7zip guestfs-tools
     else
         echo "[FAILED] Unsupported distribution: $ID"
         exit 1
