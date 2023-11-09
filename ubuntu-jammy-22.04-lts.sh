@@ -74,3 +74,7 @@ virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,mak
 
 
 echo "[ GUEST] Install guest agents"
+virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
+
+echo "[  DONE] Done.."
+mv $file_path virtioa.qcow2
