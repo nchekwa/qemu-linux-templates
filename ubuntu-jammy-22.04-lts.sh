@@ -42,8 +42,7 @@ fi
 echo "[    TZ] set timezone UTC"
 virt-customize -a $file_path --timezone UTC
 
-echo "[ACCESS] set root password"
-virt-customize -a $file_path  --root-password password:$root_pasword
+
 
 echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
@@ -75,6 +74,9 @@ virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,mak
 
 echo "[ GUEST] Install guest agents"
 virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
+
+echo "[ACCESS] set root password"
+virt-sysprep -a $file_path --root-password password:$root_pasword
 
 echo "[  DONE] Done.."
 mv $file_path virtioa.qcow2
