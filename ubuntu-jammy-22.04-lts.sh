@@ -94,7 +94,7 @@ virt-customize \
     --firstboot-command "netplan generate && netplan apply" \
     --firstboot-command "/usr/bin/ssh-keygen -A" \
     --firstboot-command "dpkg --configure -a" \
-    --firstboot-command "systemctrl restart ssh" \
+    --firstboot-command "/etc/init.d/ssh restart" \
     --firstboot-command "sync" \
     -a $file_path
     
