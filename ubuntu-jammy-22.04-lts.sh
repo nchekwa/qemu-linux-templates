@@ -66,7 +66,7 @@ virt-customize -a $file_path --run-command 'sed -i s/^#PermitRootLogin.*/PermitR
 #echo "[   SSH] Generate Keys"
 #virt-customize -a $file_path --run-command '/usr/bin/ssh-keygen -A'
 
-echo "[  DISK] - increase sda disk to 100G (original is 2.2GB)"
+echo "[  DISK] - increase sda disk size +98G"
 qemu-img resize $file_path +98G
 echo "[  DISK] - change sda1 partition size"
 virt-customize -a $file_path --run-command "growpart /dev/sda 1 &&  resize2fs /dev/sda1"
