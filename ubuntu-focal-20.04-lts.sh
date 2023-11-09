@@ -18,7 +18,14 @@ if [ -e /etc/os-release ]; then
         apt update -y && apt install nano wget curl libguestfs-tools libvirt-login-shell p7zip -y
     elif [ "$ID" == "alpine" ]; then
         echo "[      ] Running on Alpine Linux"
-        # Your Alpine installation commands here
+        # Check if testing repo exists in /etc/apk/repositories
+        if ! grep -q "http://dl-cdn.alpinelinux.org/alpine/edge/testing" /etc/apk/repositories; then
+            echo "Adding repository line"
+            echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+            apk update
+        else
+            echo "Repository line already exists"
+        fi
         apk update && apk add nano wget curl libguestfs-tools libvirt-login-shell p7zip
     else
         echo "[FAILED] Unsupported distribution: $ID"
