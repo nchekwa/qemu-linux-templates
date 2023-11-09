@@ -48,8 +48,8 @@ echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
 echo "[   SSH] allow root login with ssh-key only"
 virt-customize -a $file_path --run-command 'sed -i s/^#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config'
-echo "[   SSH] Generate Keys"
-virt-customize -a $file_path --run-command '/usr/bin/ssh-keygen -A'
+#echo "[   SSH] Generate Keys"
+#virt-customize -a $file_path --run-command '/usr/bin/ssh-keygen -A'
 
 echo "[  DISK] - increase sda disk to 100G (original is 2.2GB)"
 qemu-img resize $file_path +98G
@@ -65,7 +65,6 @@ virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y
 echo "[   APT] Uninstall some libs"
 #virt-customize -a $file_path --run-command 'apt-get purge -y netplan.io libnetplan0'
 virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
-virt-customize -a $file_path --run-command 'dpkg --configure -a'
 
 
 echo "[   APT] Install basic tools"
