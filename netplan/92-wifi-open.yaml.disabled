@@ -1,0 +1,7 @@
+network:
+  version: 2
+  wifis:
+    wl0:
+      access-points:
+        opennetwork: {}
+      dhcp4: yes
