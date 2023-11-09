@@ -16,17 +16,6 @@ if [ -e /etc/os-release ]; then
         echo "[      ] Running on Ubuntu"
         # Your Ubuntu installation commands here
         apt update -y && apt install nano wget curl libguestfs-tools libvirt-login-shell p7zip -y
-    elif [ "$ID" == "alpine" ]; then
-        echo "[      ] Running on Alpine Linux"
-        # Check if testing repo exists in /etc/apk/repositories
-        if ! grep -q "http://dl-cdn.alpinelinux.org/alpine/edge/testing" /etc/apk/repositories; then
-            echo "Adding repository line"
-            echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-            apk update
-        else
-            echo "Repository line already exists"
-        fi
-        apk update && apk add nano wget curl libguestfs p7zip guestfs-tools
     else
         echo "[FAILED] Unsupported distribution: $ID"
         exit 1
@@ -60,7 +49,8 @@ echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
 echo "[   SSH] allow root login with ssh-key only"
 virt-customize -a $file_path --run-command 'sed -i s/^#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config'
-
+echo "[   SSH] Generate Keys"
+virt-customize -a $file_path --run-command '/usr/bin/ssh-keygen -A'
 
 echo "[  DISK] - increase sda disk to 100G (original is 2.2GB)"
 qemu-img resize $file_path +98G
