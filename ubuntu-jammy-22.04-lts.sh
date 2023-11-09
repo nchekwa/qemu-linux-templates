@@ -70,23 +70,22 @@ echo "[  DISK] - change sda1 partition size"
 virt-customize -a $file_path --run-command "growpart /dev/sda 1 &&  resize2fs /dev/sda1"
 # virt-filesystems --long --parts --blkdevs -h -a $file_path
 
-
 echo "[   APT] Add agent to image"
 virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y'
-
 
 echo "[   APT] Uninstall some libs"
 virt-customize -a $file_path --run-command 'apt-get purge -y docker.io containerd runc php7.4* php8*'
 
-
 echo "[   APT] Install basic tools"
 virt-customize -a $file_path --install ifenslave,ntp,unzip,zip,mc,screen,gcc,make,wget,curl,telnet,traceroute,tcptraceroute,sudo,gnupg,ca-certificates,nfs-common,aria2,qemu-utils
-
 
 echo "[ GUEST] Install guest agents"
 virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
 
-echo "[ACCESS] set root password"
+echo "[   APT] Cleanup"
+virt-customize -a $file_path --run-command 'apt-get clean --dry-run'
+
+echo "[ LAST ] Last changes.. + firstboot parameters"
 virt-customize \
     --root-password password:$root_pasword \
     --run-command "sed -i 's/ console=ttyS0//g' /etc/default/grub.d/50-cloudimg-settings.cfg" \
