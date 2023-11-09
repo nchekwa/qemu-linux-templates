@@ -1,0 +1,13 @@
+network:
+  version: 2
+  wifis:
+    wl0:
+      access-points:
+        workplace:
+          auth:
+            key-management: eap
+            method: ttls
+            anonymous-identity: "@internal.example.com"
+            identity: "joe@internal.example.com"
+            password: "v3ryS3kr1t"
+      dhcp4: yes
