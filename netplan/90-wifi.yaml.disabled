@@ -1,0 +1,9 @@
+network:
+  version: 2
+  renderer: NetworkManager
+  wifis:
+    wlp2s0b1:
+      dhcp4: yes
+      access-points:
+        "network_ssid_name":
+          password: "**********"
