@@ -1,15 +1,33 @@
 #!/bin/sh
 
+
+root_pasword=root
 url="https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 file_path=$(basename "$url")
 
-# ### Set Debug in case of troubelshooting
+# ### Set Debug in case of troubleshooting
 #export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
 
 
-echo "[      ] Install local tools nessesery to run virt..."
-apt update -y &&tapt install nano wget curl libguestfs-tools libvirt-login-shell 7zip -y
-
+echo "[      ] Install local tools necessary to run virt..."
+if [ -e /etc/os-release ]; then
+    source /etc/os-release
+    if [ "$ID" == "ubuntu" ]; then
+        echo "[      ] Running on Ubuntu"
+        # Your Ubuntu installation commands here
+        apt update -y && apt install nano wget curl libguestfs-tools libvirt-login-shell p7zip -y
+    elif [ "$ID" == "alpine" ]; then
+        echo "[      ] Running on Alpine Linux"
+        # Your Alpine installation commands here
+        apk update && apk add nano wget curl libguestfs-tools libvirt-login-shell p7zip
+    else
+        echo "[FAILED] Unsupported distribution: $ID"
+        exit 1
+    fi
+else
+    echo "Unable to determine distribution."
+    exit 1
+fi
 
 
 echo "[   ISO] Download UBUNTU img if not exist"
@@ -21,9 +39,15 @@ else
 fi
 
 
+
+
+
+
 echo "[    TZ] set timezone UTC"
 virt-customize -a $file_path --timezone UTC
 
+echo "[ACCESS] set root password"
+virt-customize -a $file_path  --root-password password:root
 
 echo "[   SSH] enable password auth to yes"
 virt-customize -a $file_path --run-command 'sed -i s/^PasswordAuthentication.*/PasswordAuthentication\ yes/ /etc/ssh/sshd_config'
