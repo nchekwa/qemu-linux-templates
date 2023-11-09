@@ -35,7 +35,7 @@ else
 fi
 
 echo "[NETPLAN] Download NETPLAN files"
-files=("01-netcfg.yaml" "02-netcfg.yaml" "03-netcfg.yaml")
+files=("00-dhcp.yaml")
 download_dir="/tmp/netplan"
 mkdir -p $download_dir
 base_url="https://raw.githubusercontent.com/nchekwa/qemu-linux-templates/main/netplan/"
