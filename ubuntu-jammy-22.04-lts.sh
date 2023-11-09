@@ -34,8 +34,9 @@ else
     echo "[      ] File already exists."
 fi
 
-
-
+echo "[NETPLAN] Download NETPLAN files"
+mkdir /tmp/netplan
+wge
 
 
 
