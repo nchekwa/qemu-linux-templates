@@ -45,8 +45,13 @@ for file_name in "${files[@]}"; do
     url="$base_url$file_name"
     output_path="$download_dir/$file_name"
     wget "$url" -O "$output_path"
+    virt-customize -a $file_path --copy-in $download_dir/$file_name:/etc/netplan
 done
 
+
+
+
+    
 
 
 echo "[    TZ] set timezone UTC"
@@ -85,7 +90,17 @@ virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y
 #virt-customize -a $file_path --install qemu-guest-agent,open-vm-tools
 
 echo "[ACCESS] set root password"
-virt-sysprep -a $file_path --root-password password:$root_pasword
+virt-customize \
+    --root-password password:$root_pasword
+    --run-command "sed -i 's/ console=ttyS0//g' /etc/default/grub.d/50-cloudimg-settings.cfg" \
+    --run-command "sed -i 's/GRUB_CMDLINE_LINUX/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0 console=tty1\"/g' /etc/default/grub" \
+    --run-command "update-grub" \
+    --run-command "systemctl mask apt-daily.service apt-daily-upgrade.service" \
+    --firstboot-command "netplan generate && netplan apply" \
+    --firstboot-command "dpkg-reconfigure openssh-server" \
+    --firstboot-command "sync" \
+    -a $file_path
+    
 
 echo "[  DONE] Done.."
 mv $file_path virtioa.qcow2
