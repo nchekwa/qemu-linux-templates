@@ -35,8 +35,17 @@ else
 fi
 
 echo "[NETPLAN] Download NETPLAN files"
-mkdir /tmp/netplan
-wge
+files=("01-netcfg.yaml" "02-netcfg.yaml" "03-netcfg.yaml")
+download_dir="/tmp/netplan"
+mkdir -p $download_dir
+base_url="https://raw.githubusercontent.com/nchekwa/qemu-linux-templates/main/netplan/"
+
+# Loop through the array and download files
+for file_name in "${files[@]}"; do
+    url="$base_url$file_name"
+    output_path="$download_dir/$file_name"
+    wget "$url" -O "$output_path"
+done
 
 
 
