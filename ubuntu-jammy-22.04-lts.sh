@@ -91,7 +91,7 @@ virt-customize -a $file_path --run-command 'apt-get update && apt-get upgrade -y
 
 echo "[ACCESS] set root password"
 virt-customize \
-    --root-password password:$root_pasword
+    --root-password password:$root_pasword \
     --run-command "sed -i 's/ console=ttyS0//g' /etc/default/grub.d/50-cloudimg-settings.cfg" \
     --run-command "sed -i 's/GRUB_CMDLINE_LINUX/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0 console=tty1\"/g' /etc/default/grub" \
     --run-command "update-grub" \
