@@ -44,7 +44,7 @@ base_url="https://raw.githubusercontent.com/nchekwa/qemu-linux-templates/main/ne
 for file_name in "${files[@]}"; do
     url="$base_url$file_name"
     output_path="$download_dir/$file_name"
-    wget -s "$url" -O "$output_path"
+    wget -q "$url" -O "$output_path"
     virt-customize -a $file_path --copy-in $download_dir/$file_name:/etc/netplan
 done
 virt-customize -a $file_path --run-command 'chmod -R 600 /etc/netplan/'
